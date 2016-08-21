@@ -1,0 +1,244 @@
+* Installation of Arch Linux on Lenovo Thinkpad X230
+** Hardware
+*** General
+- Intel i5 3360M with vPro
+- 16GB RAM SODIMM DDR3L PC12800 CL9 204 Pin Kingston HyperX (Model HX316LS9IBK2/16)
+- 9 Cell Battery Genuine Lenovo 44++
+- Intel SSD 530 Series SATA 120GB
+*** Output of lspci
+- 00:00.0 Host bridge: Intel Corporation 3rd Gen Core processor DRAM Controller (rev 09)
+- 00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor Graphics Controller (rev 09)
+- 00:14.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller (rev 04)
+- 00:16.0 Communication controller: Intel Corporation 7 Series/C210 Series Chipset Family MEI Controller #1 (rev 04)
+- 00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)
+- 00:1a.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #2 (rev 04)
+- 00:1b.0 Audio device: Intel Corporation 7 Series/C210 Series Chipset Family High Definition Audio Controller (rev 04)
+- 00:1c.0 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 1 (rev c4)
+- 00:1c.1 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 2 (rev c4)
+- 00:1d.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #1 (rev 04)
+- 00:1f.0 ISA bridge: Intel Corporation QM77 Express Chipset LPC Controller (rev 04)
+- 00:1f.2 SATA controller: Intel Corporation 7 Series Chipset Family 6-port SATA Controller [AHCI mode] (rev 04)
+- 00:1f.3 SMBus: Intel Corporation 7 Series/C210 Series Chipset Family SMBus Controller (rev 04)
+- 02:00.0 System peripheral: Ricoh Co Ltd PCIe SDXC/MMC Host Controller (rev 07)
+- 03:00.0 Network controller: Intel Corporation Centrino Advanced-N 6205 [Taylor Peak] (rev 34)
+** BIOS Settings
+*** Main
+| UEFI Bios Version           | G2ET99WW (2.59)     |
+| UEFI Bios Date              | 2013-12-04          |
+| Embedded Controller Version | G2HT34WW (1.13)     |
+| CPU Type                    | Intel Core i5 3360M |
+| CPU Speed                   | 2.80 GHz            |
+| Installed Memory            | 16,384MB            |
+| UEFI Secure Boot            | Off                 |
+*** Config
+**** Network
+| Wake on LAN             | AC Only    |
+| UEFI IPv4 Network Stack | Enabled    |
+| UEFI IPv6 Network Stack | Enabled    |
+| UEFI PXE Boot Priority  | IPv4 First |
+**** USB
+| USB UEFI BIOS Support            | Enabled  |
+| Always on USB                    | Enabled  |
+| Always on USB Charge in Off Mode | Disabled |
+| USB 3.0 Mode                     | Auto     |
+**** Keyboard / Mouse
+| Trackpoint           | Enabled  |
+| Touch Pad            | Enabled  |
+| Fn and Ctrl Key Swap | Disabled |
+| Fn Key Lock          | Disabled |
+**** Display
+| Boot Display Device | ThinkPad LCD |
+**** Power
+| Intel Speedstep Technology   | Enabled              |
+| Mode for AC                  | Maximum Performance  |
+| Mode for Battery             | Battery Optimized    |
+| Adaptive Thermal Management  |                      |
+| Scheme for AC                | Maximize Performance |
+| Scheme for Battery           | Balanced             |
+| Optical Drive Speed          | Normal               |
+| CPU Power Management         | Enabled              |
+| PCI Express Power Management | Enabled              |
+| Express Card Speed           | Automatic            |
+| Power On with AC Attach      | Disabled             |
+| Intel Rapid Start Technology | Enabled              |
+| Entry After                  | 30 Minutes           |
+**** Beep and Alarm
+| Password Beep | Disabled |
+| Keyboard Beep | Enabled  |
+**** Serial ATA
+| SATA Controller Mode Option | AHCI |
+**** CPU
+| Core Multi-Processing            | Enabled |
+| Intel Hyper-Threading Technology | Enabled |
+**** Intel AMT
+| Intel AMT Control | Disabled |
+*** Security
+**** Password
+| Hardware Password Manager   | Enabled |
+| Supervisor Password         | Enabled |
+| Lock UEFI Bios Settings     | Enabled |
+| Password at unattended Boot | Enabled |
+| Password at restart         | Enabled |
+| Power-On Password           | Enabled |
+| Hard-Disk Password          | Enabled |
+**** Fingerprint
+| Predesktop Authentication | Enabled              |
+| Reader Priority           | External -> Internal |
+| Security Mode             | Normal               |
+**** Security Chip
+| Security Chip                      | Active   |
+| BIOS ROM Strings Reporting         | Disabled |
+| CMOS Reporting                     | Disabled |
+| NVRAM Reporting                    | Disabled |
+| SMBIOS Reporting                   | Disabled |
+| Intel TXT Feature                  | Disabled |
+| Physical Presence for Provisioning | Disabled |
+| Physical Presence for Clear        | Enabled  |
+**** UEFI Bios Update Option
+| Flash BIOS Updating by End-Users | Enabled  |
+| Secure Rollback Prevention       | Disabled |
+**** Memory Protection
+| Execution Prevention | Enabled |
+**** Virtualization
+| Intel Virtualization Technology | Enabled |
+| Intel VT-d Feature              | Enabled |
+**** I/O Port Access
+| Ethernet LAN       | Enabled  |
+| Wireless LAN       | Enabled  |
+| WiMAX              | Enabled  |
+| Wireless WAN       | Enabled  |
+| Bluetooth          | Enabled  |
+| USB Port           | Enabled  |
+| ExpressCard Slot   | Disabled |
+| Ultrabay           | Enabled  |
+| eSATA Port         | Enabled  |
+| Memory Card Slot   | Enabled  |
+| Integrated Camera  | Enabled  |
+| Microphone         | Enabled  |
+| Fingerprint Reader | Enabled  |
+**** Anti-Theft
+| Intel AT Module Activation   | Disabled      |
+| Intel AT Module State        | Not Activated |
+| CompuTrace Module Activation | Disabled      |
+| CompuTrace Module State      | Not Activated |
+**** Secure Boot
+| Secure Boot         | Disabled      |
+| Platform Mode       | User Mode     |
+| Secure Boot Mode    | Standard Mode |
+*** Startup 
+| Network Boot                | PCI LAN   |
+| UEFI/Legacy Boot            | UEFI Only |
+| CSM Support                 | Yes       |
+| Boot Mode                   | Quick     |
+| Option Key Display          | Enabled   |
+| Boot Device List F12 Option | Enabled   |
+| Boot Order Lock             | Disabled  |
+** Creating USB Boot Media
+Download the arch-XXX-dual.iso image from http://www.archlinux.org
+*** Using Mac OS X
+1. Open a terminal
+2. Find USB drive ~diskutil list~
+3. Write image ~sudo dd if=archlinux.img of=/dev/rdiskX bs=1m~
+** Base Installation
+*** Boot from USB
+- Ensure ~Secure Boot~ is disabled in the BIOS.
+- Hit ~ENTER~ on BIOS prompt, hit ~F12~, select USB drive.
+- In the menu, select Arch Linux UEFI.
+*** Connect to Network
+Either plug in the Ethernet cable, or to get access via WiFi, run ~wifi-menu~
+command and follow the prompts.
+*** Partitioning
+We will use the following partition layout using the ~parted~ and ~gdisk~ commands:
+- 512MB partition for EFI, formatted ~fat32~, mounted to ~/boot~
+- 40GB partition for OS, formatted ~ext4~, mounted to ~/~
+- 60GB partition for User, formatted ~ext4~, mounted to ~/home~
+- 16GB partition for Intel Rapid Start, labeled
+  GUID=D3BFE2DE-3DAF-11DF-BA40-E3A556D89593
+Note that we will not create a swap partition in this system, since 16GB of RAM
+are plenty and anything beyond that we can more easily handle with swap files
+anyway. Instead we will use the Intel Rapid Start firmware of our i5 vPro chip to
+implement a BIOS based suspend to hibernate. It is also entirely possible to
+implement a software based suspend to hibernate on this system via a swap partition. 
+**** Preparation
+- Check which block devices are available in the system using the ~lsblk~
+  command. Usually the SSD is ~/dev/sda~.
+- Start the partition editor ~parted /dev/sdX~ where ~X~ is the correct block
+  device name.
+- In ~parted~ run ~mklabel gpt~ to create a GPT partition table on the
+  block device. *THIS WILL DESTROY ALL DATA ON THE DEVICE!*.
+**** For the EFI Partition
+- In ~parted~ run ~mkpart ESP fat32 1MiB 513MiB~ to create a UEFI partition of
+  type EFI System Partition (ESP), formatted to ~fat32~ filesystem with a size
+  of 512 MB.
+- In ~parted~ run ~set 1 boot on~ to set the boot flag on the ESP partition.
+**** For the OS Partition
+In ~parted~ run ~mkpart primary ext4 513MiB 40GiB~ to allocate 40GB space and
+formatted to an ext4 filesystem.
+**** For the Home Partition
+In ~parted~ run ~mkpart primary ext4 40GiB 100GiB~ to allocate 100GB space and
+formatted to an ext4 filesystem.
+**** For the Intel Rapid Start Partition
+Run ~gdisk /dev/sdX~ where ~X~ is the correct block device name. Once in ~gdisk~
+we will run the following commands in order:
+- ~p~ to print the partition table. The output of this command should say
+  16.5GiB of free space available on the 128GB SSD drive.
+- ~n~ to create a new partition. Since we only have 16.5GB free space at the
+  very end of the disk, we can hit ~ENTER~ on all questions until we see info
+  about HEX code or GUID.
+- Enter ~D3BFE2DE-3DAF-11DF-BA40-E3A556D89593~ as the GUID for this partition.
+- Finish with ~w~ and ~Y~ to write these changes to disk.
+*** Create the Filesystems
+Next, we need to format the partitions created in the previous step. I assume
+that you block device is ~/dev/sda~ and that the partitions were created as
+above.
+#+BEGIN_SRC sh 
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/sda3
+#+END_SRC
+*** Mount the Partitions
+Now it's time to mount our OS, Home and Boot Partitions. First we mount root.
+#+BEGIN_SRC sh
+mount /dev/sda2 /mnt
+#+END_SRC
+
+Next, we create a directory ~boot~ and mount our ESP partition to it.
+#+BEGIN_SRC sh
+mkdir -p /mnt/boot
+mount /dev/sda1 /mnt/boot
+#+END_SRC
+
+Now, we create a directory ~home~ and mount our Home partition to it.
+#+BEGIN_SRC sh
+mkdir -p /mnt/home
+mount /dev/sda3 /mnt/home
+#+END_SRC
+
+We are all set to proceed the installation and install the base system files.
+*** Install System Files
+*** Setup Boot Manager
+*** Setup Hostname
+*** Add a User
+*** Install First Boot Essentials
+*** Boot the new System
+** Kernel Modules
+** Power
+** Desktop Environment
+** Tweaks
+*** Powersaving
+**** Automatically power down audio card
+Add the following line to ~/etc/modprobe.d/audio_powersave.conf~:
+#+BEGIN_SRC bash
+options snd_hda_intel power_save=1
+#+END_SRC
+*** Fingerprint Reader
+*** Touchpad
+*** Gnome3
+*** Intel Wifi
+- Create file ~/etc/modprobe.d/iwlwifi.conf~
+- Insert lines 
+#+BEGIN_SRC bash 
+options iwlwifi 11n_disable=1
+options iwlwifi swcrypto=1
+#+END_SRC
+  
