@@ -2,7 +2,7 @@
 ** Hardware
 *** General
 - Intel i5 3360M with vPro
-- 16GB RAM SODIMM DDR3L PC12800 CL9 204 Pin Kingston HyperX (Model HX316LS9IBK2/16)
+- Upgraded to 16GB RAM SODIMM DDR3L PC12800 CL9 204 Pin Kingston HyperX (Model HX316LS9IBK2/16)
 - 9 Cell Battery Genuine Lenovo 44++
 - Intel SSD 530 Series SATA 120GB
 *** Output of lspci
@@ -162,21 +162,33 @@ implement a software based suspend to hibernate on this system via a swap partit
 **** Preparation
 - Check which block devices are available in the system using the ~lsblk~
   command. Usually the SSD is ~/dev/sda~.
-- Start the partition editor ~parted /dev/sdX~ where ~X~ is the correct block
+- Start the partition editor with ~parted /dev/sdX~, where ~X~ is the correct block
   device name.
-- In ~parted~ run ~mklabel gpt~ to create a GPT partition table on the
-  block device. *THIS WILL DESTROY ALL DATA ON THE DEVICE!*.
+- In ~parted~ create a GPT partition table on the block device. *THIS WILL
+  DESTROY ALL DATA ON THE DEVICE!*
+#+BEGIN_SRC sh
+mklabel gpt
+#+END_SRC
 **** For the EFI Partition
-- In ~parted~ run ~mkpart ESP fat32 1MiB 513MiB~ to create a UEFI partition of
-  type EFI System Partition (ESP), formatted to ~fat32~ filesystem with a size
-  of 512 MB.
-- In ~parted~ run ~set 1 boot on~ to set the boot flag on the ESP partition.
+- In ~parted~ run to create a UEFI partition of type EFI System Partition (ESP),
+  formatted to ~fat32~ filesystem with a size of 512 MB.
+#+BEGIN_SRC sh
+(parted) mkpart ESP fat32 1MiB 513MiB
+#+END_SRC
+- In ~parted~ set the boot flag on the ESP partition.
+#+BEGIN_SRC sh
+(parted) set 1 boot on
+#+END_SRC
 **** For the OS Partition
-In ~parted~ run ~mkpart primary ext4 513MiB 40GiB~ to allocate 40GB space and
-formatted to an ext4 filesystem.
+In ~parted~ run to allocate 40GB space and formatted to an ext4 filesystem.
+#+BEGIN_SRC sh
+(parted) mkpart primary ext4 513MiB 40GiB
+#+END_SRC
 **** For the Home Partition
-In ~parted~ run ~mkpart primary ext4 40GiB 100GiB~ to allocate 100GB space and
-formatted to an ext4 filesystem.
+In ~parted~ run to allocate 100GB space and formatted to an ext4 filesystem.
+#+BEGIN_SRC sh
+(parted) mkpart primary ext4 40GiB 100GiB
+#+END_SRC
 **** For the Intel Rapid Start Partition
 Run ~gdisk /dev/sdX~ where ~X~ is the correct block device name. Once in ~gdisk~
 we will run the following commands in order:
@@ -216,15 +228,130 @@ mount /dev/sda3 /mnt/home
 
 We are all set to proceed the installation and install the base system files.
 *** Install System Files
-*** Setup Boot Manager
+With all the partitions mounted in place, we will now continue to install Arch
+Linux on the system. We install the ~base~ and ~base-devel~ collections:
+#+BEGIN_SRC sh
+pacstrap -i /mnt base base-devel
+#+END_SRC
+
+After all packages are installed, we generate an ~fstab~ file. Here the ~-U~
+flag asks the generator to use partition UUIDs instead of kernel device names.
+#+BEGIN_SRC sh
+genfstab -U /mnt > /mnt/etc/fstab
+#+END_SRC
+
+Next, we switch into our new system and finish the installation there.
+#+BEGIN_SRC sh
+arch-chroot /mnt /bin/bash
+#+END_SRC
+
+First, we setup the system language:
+#+BEGIN_SRC sh
+nano /etc/locale.gen
+#+END_SRC
+In this file, find the line that corresponds to your language preference. Mine
+is US English with UTF-8 character support, aka ~en_US.UTF-8~. After editing, we
+let the system generate the locale files.
+#+BEGIN_SRC sh
+locale-gen
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+#+END_SRC
+
+Next, we configure the system time:
+#+BEGIN_SRC sh
+tzselect
+#+END_SRC
+We also create a symbolic link, for me the selected time zone was ~America/Toronto~
+#+BEGIN_SRC sh
+ln -s /usr/share/zoneinfo/America/Toronto /etc/localtime
+#+END_SRC
+Finally, we will use the hardware clock for our system, which expects the clock
+to be set to UTC. This can often mix things up with other Operating Systems such
+as Windows or Mac OS X, so be careful when multi-booting. Our system is a
+Linux-exclusive, so no worries there.
+#+BEGIN_SRC sh
+hwclock --systohc --utc
+#+END_SRC
 *** Setup Hostname
+In the next step, set the hostname for your machine. 
+#+BEGIN_SRC sh
+echo "my-laptop" > /etc/hostname 
+#+END_SRC
+*** Setup Boot Manager
+We are using an UEFI setup, so let's install ~grub~ and the ~efibootmgr~. For
+multiboot setups, make sure to also install the ~os-prober~ package for
+multiboot support. We don't need this for our machine.
+#+BEGIN_SRC sh
+pacman -S grub efibootmgr
+#+END_SRC
+
+Now let's setup ~grub~, our Boot partition was mounted earlier under ~/mnt/boot~
+which in the change root environment becomes ~/boot~:
+#+BEGIN_SRC sh
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
+grub-mkconfig =o /boot/grub/grub.cfg
+#+END_SRC
 *** Add a User
+First things first! Let's set a password for our ~root~ user account before we
+proceed!
+#+BEGIN_SRC sh
+passwd
+#+END_SRC
+
+Next, we will go ahead an add a regular user account that we will use in our
+day-to-day activities. I picked ~nicbet~ for my username, you can pick your own!
+#+BEGIN_SRC sh
+useradd -m -G wheel,users -s /bin/bash nicbet
+passwd nicbet
+#+END_SRC
+
+We added the user to the ~wheel~ group. This is a special group that will allow
+our user to execute administrative commands using the ~sudo~ tool. For this to
+work we will have to allow the ~wheel~ group to execute ~sudo~ commands. The
+safest way to do this is via the ~visudo~ command.
+#+BEGIN_SRC sh
+pacman -S sudo
+EDITOR=nano visudo
+#+END_SRC
+Find and uncomment the line
+#+BEGIN_SRC text
+%wheel ALL=(ALL) ALL
+#+END_SRC
 *** Install First Boot Essentials
+Before we can exit out of our change root environment and start our fresh system
+for the first time, we need to install some essentials while we are still booted
+from the USB and have a working network connection. The ~wifi-menu~ command we
+ran earlier to get our Wifi connection working was installed as part of the
+~base~ packages, however, for it to function, we need the ~dialog~ and the
+~wpa_supplicant~ dependencies.
+#+BEGIN_SRC sh
+pacman -S iw wpa_supplicant dialog
+#+END_SRC
 *** Boot the new System
+We are ready to boot our new system! First we exit out of the change root environment.
+#+BEGIN_SRC sh
+exit
+#+END_SRC
+
+Next, we unmount all partitions:
+#+BEGIN_SRC sh
+umount /mnt/home
+umount /mnt/boot
+umount /mnt
+#+END_SRC
+
+And finally shutdown the system:
+#+BEGIN_SRC sh
+shutdown -h now
+#+END_SRC
+
+Once the shutdown is completed, remove the USB Boot Media and power on the new system.
 ** Kernel Modules
 ** Power
 ** Desktop Environment
 ** Tweaks
+*** Fish Shell
 *** Powersaving
 **** Automatically power down audio card
 Add the following line to ~/etc/modprobe.d/audio_powersave.conf~:
