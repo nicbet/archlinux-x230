@@ -1,4 +1,36 @@
 * Installation of Arch Linux on Lenovo Thinkpad X230
+*** Introduction
+About a week ago, I picked up a beaten up old Lenovo X230 machine with the goal
+of making this my schlepp-everywhere Linux development box.
+
+Those little laptops are awesome! They support the Linux operating system
+extremely well, in fact most things work out of the box and reliably, such as
+sleep, hibernate, attaching external displays, Wifi, keyboard, touchpad,
+trackpoint, etc. The X230 has a full voltage CPU that's actually quite beefy and
+makes the machine very pleasant to develop with.
+
+First thing I did though was toss the built-in 4GB RAM stick and pop in a fresh
+set of Kingston HyperX SODIMMs. They can be had at Canada Computers for around
+80$ and are totally worth the investment - especially when running tons of
+docker containers and VMs during development.
+
+This git repo records my journey of installing Arch Linux, a running, binaries
+based Linux distribution that's quite popular among developers.
+*** Why Arch Linux?
+Why Arch? Well I'm a big fan of continuous integration (CI) and continuous
+delivery (CD) at my workplace so I knew that I wouldn't want a step-wise
+released system such as Ubuntu or Fedora. 
+
+Don't get me wrong, they are by no means bad distributions of Linux, in fact
+they are well preferable for servers where it's all about repeatability of the
+environment. In any case, that choice left me with Gentoo or an Arch-based Linux
+distribution. 
+
+I don't like compiling everything and the kitchen sink from scratch - I've done
+that a decade ago during my undergrad days to learn about all things C++, make
+and optimization, but boy is it a time sucker! I need to be productive. Fast!
+That really only left me with Arch Linux. I dabbled with Manjaro, but in the end
+decided to go pure Arch for the power of choice. Here we go!
 ** Hardware
 *** General
 - Intel i5 3360M with vPro
